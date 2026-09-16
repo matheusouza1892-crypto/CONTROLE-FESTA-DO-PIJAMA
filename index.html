@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Festa do Pijama</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#17152d,#4a3475);color:#fff;min-height:100vh;padding:20px}
+.card{max-width:540px;margin:auto;background:#fff;color:#28223d;border-radius:28px;padding:26px;box-shadow:0 20px 60px #0008}
+h1{text-align:center;color:#7652b8;margin:0 0 8px;font-size:32px}.sub{text-align:center;color:#6c6478;margin-bottom:20px}
+.info{background:#f0e7ff;border-radius:17px;padding:15px;line-height:1.6;margin-bottom:20px}
+label{display:block;font-weight:700;margin:15px 0 7px}input,textarea,button{font:inherit}
+input,textarea{width:100%;padding:13px;border:2px solid #ddd1f3;border-radius:13px}
+.choices{display:flex;gap:10px}.choices label{flex:1;margin:0}.choices input{display:none}
+.choices span{display:block;text-align:center;padding:13px;border:2px solid #ddd1f3;border-radius:13px;cursor:pointer}
+.choices input:checked+span{background:#e9ddff;border-color:#805bc0;font-weight:bold}
+button{width:100%;border:0;border-radius:14px;padding:14px;margin-top:20px;background:#805bc0;color:#fff;font-weight:bold;cursor:pointer}
+.hidden{display:none}.ok{background:#e8f7eb;padding:16px;border-radius:15px;text-align:center;margin-top:18px}
+a{color:#7652b8}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🌙 Festa do Pijama</h1>
+<div class="sub">18/09/2026 → 19/09/2026</div>
+<div class="info">🕐 <b>Início:</b> 12h40, depois da aula<br>🏠 <b>Local:</b> minha casa<br>🍿 <b>Vai ter:</b> snacks, filmes e jogos</div>
+
+<form id="form">
+<label>Seu nome</label><input id="nome" required>
+<label>Você vai?</label>
+<div class="choices">
+<label><input type="radio" name="presenca" value="Vou!" required><span>✅ Vou!</span></label>
+<label><input type="radio" name="presenca" value="Não vou"><span>❌ Não vou</span></label>
+</div>
+<label>🎬 Sugestões de filmes</label><textarea id="filmes" rows="3" placeholder="Escreva suas sugestões"></textarea>
+<label>💡 Outra sugestão?</label><textarea id="sugestao" rows="3" placeholder="Jogos, snacks, brincadeiras..."></textarea>
+<button>Enviar confirmação 💜</button>
+</form>
+<div id="ok" class="ok hidden">🎉 Resposta enviada!<br><br>Obrigado por confirmar.</div>
+</div>
+<script>
+const API_URL="COLE_AQUI_A_URL_DO_SEU_WEB_APP";
+document.getElementById("form").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(API_URL.startsWith("COLE_")){alert("O responsável pelo convite ainda precisa configurar o link do formulário.");return;}
+ const body={nome:document.getElementById("nome").value.trim(),presenca:document.querySelector('input[name="presenca"]:checked').value,filmes:document.getElementById("filmes").value.trim(),sugestao:document.getElementById("sugestao").value.trim()};
+ try{
+  const r=await fetch(API_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(body)});
+  document.getElementById("form").classList.add("hidden");document.getElementById("ok").classList.remove("hidden");
+ }catch(err){alert("Não foi possível enviar agora. Tente novamente.");}
+});
+</script>
+</body>
+</html>
