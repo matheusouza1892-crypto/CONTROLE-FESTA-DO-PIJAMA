@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Controle — Festa do Pijama</title>
+<style>
+body{font-family:Arial;margin:0;background:#f4effb;color:#29213e;padding:20px}.box{max-width:900px;margin:auto;background:#fff;padding:24px;border-radius:22px;box-shadow:0 10px 30px #0002}h1{color:#7652b8}.stats{display:flex;gap:12px;flex-wrap:wrap}.stat{padding:14px;background:#eee5ff;border-radius:14px;min-width:120px}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}button{padding:10px 14px;border:0;border-radius:10px;background:#7652b8;color:#fff;font-weight:bold}#login{max-width:400px;margin:60px auto;background:#fff;padding:24px;border-radius:20px}input{width:100%;padding:12px;margin:8px 0 14px;box-sizing:border-box}
+</style></head><body>
+<div id="login"><h2>🔐 Controle da festa</h2><input id="senha" type="password" placeholder="Senha"><button onclick="entrar()">Entrar</button></div>
+<div id="app" class="box" style="display:none"><h1>🌙 Controle — Festa do Pijama</h1><button onclick="carregar()">Atualizar respostas</button><div id="stats" class="stats"></div><div style="overflow:auto"><table><thead><tr><th>Nome</th><th>Presença</th><th>Filmes</th><th>Outra sugestão</th><th>Data</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+<script>
+const API_URL="COLE_AQUI_A_URL_DO_SEU_WEB_APP";let senha="";
+function entrar(){senha=document.getElementById("senha").value;if(!senha){alert("Digite a senha.");return}document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";carregar();}
+async function carregar(){
+ if(API_URL.startsWith("COLE_")){alert("Configure primeiro a URL do Web App.");return}
+ try{const r=await fetch(API_URL+"?action=list&senha="+encodeURIComponent(senha));const d=await r.json();if(!d.ok){alert("Senha incorreta.");return}
+ let sim=d.rows.filter(x=>x.presenca==="Vou!").length, nao=d.rows.filter(x=>x.presenca==="Não vou").length;
+ document.getElementById("stats").innerHTML=`<div class="stat"><b>${d.rows.length}</b><br>respostas</div><div class="stat"><b>${sim}</b><br>vão</div><div class="stat"><b>${nao}</b><br>não vão</div>`;
+ document.getElementById("rows").innerHTML=d.rows.map(x=>`<tr><td>${esc(x.nome)}</td><td>${esc(x.presenca)}</td><td>${esc(x.filmes)}</td><td>${esc(x.sugestao)}</td><td>${esc(x.data)}</td></tr>`).join("");
+ }catch(e){alert("Erro ao carregar respostas.");}
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+</script></body></html>
